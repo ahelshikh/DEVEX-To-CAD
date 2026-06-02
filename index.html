@@ -220,7 +220,7 @@
     </div>
 
     <p class="footer-note">
-      DevEx rate: <span class="highlighted">100,000 Robux = $380 USD</span> &middot; <span id="status">Loading rate…</span>
+      DevEx rate: <span class="highlighted">10,000 Robux = $38 USD</span> &middot; <span id="status">Loading rate…</span>
     </p>
   </section>
 
@@ -228,7 +228,7 @@
   const DEVEX_USD_PER_ROBUX = 380 / 100000;
   const CACHE_KEY = 'usdCadRate.v1';
   const CACHE_MAX_AGE_MS = 24 * 60 * 60 * 1000;
-  const FALLBACK_RATE = 1.37;
+  const FALLBACK_RATE = 1.38;
 
   const robuxInput = document.getElementById('robux');
   const usdEl = document.getElementById('usd');
@@ -262,7 +262,7 @@
     } catch (e) {}
 
     try {
-      const res = await fetch('https://api.frankfurter.app/latest?from=USD&to=CAD');
+      const res = await fetch('https://api.frankfurter.dev/v1/latest?from=USD&to=CAD');
       if (!res.ok) throw new Error('Bad response');
       const data = await res.json();
       const rate = data.rates && data.rates.CAD;
