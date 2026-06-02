@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>DevEx to CAD</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #27282c;
+    --card: rgb(17, 17, 17);
+    --output-bg: rgb(14, 14, 14);
+    --green: #29973f;
+    --green-dim: rgba(41, 151, 63, 0.15);
+    --text: #ffffff;
+    --text-muted: rgba(255, 255, 255, 0.55);
+    --text-soft: rgba(255, 255, 255, 0.75);
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body { height: 100%; }
+
+  body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    background-color: var(--bg);
+    color: var(--text);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 140px 20px 40px;
+    min-height: 100vh;
+  }
+
+  .header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 26px;
+    margin-bottom: 44px;
+  }
+
+  .header h1 {
+    margin: 0;
+    font-size: 3.6rem;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+  }
+
+  .header h1 .accent {
+    color: var(--green);
+  }
+
+  .flag {
+    width: 110px;
+    height: 55px;
+    border-radius: 6px;
+    box-shadow: 0 3px 12px rgba(0,0,0,0.45);
+    flex-shrink: 0;
+    display: block;
+  }
+
+  .calc-container {
+    background-color: var(--card);
+    border-radius: 20px;
+    box-shadow: 0 4px 28px 4px rgb(18, 18, 18);
+    padding: 70px 60px;
+    width: 100%;
+    max-width: 780px;
+    text-align: center;
+  }
+
+  .input-container {
+    position: relative;
+    display: inline-block;
+    margin: 10px 0 50px;
+  }
+
+  .input-container input {
+    border-radius: 100px;
+    height: 64px;
+    width: 400px;
+    border: none;
+    padding: 0 28px 0 70px;
+    font-size: 20px;
+    font-weight: 500;
+    text-align: center;
+    font-family: 'Poppins', sans-serif;
+    background: #fff;
+    color: #111;
+    outline: none;
+    transition: box-shadow 0.2s ease;
+  }
+
+  .input-container input:focus {
+    box-shadow: 0 0 0 4px var(--green-dim);
+  }
+
+  .input-container input::placeholder {
+    color: #888;
+    font-weight: 400;
+  }
+
+  .input-container input::-webkit-outer-spin-button,
+  .input-container input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  .input-container input { -moz-appearance: textfield; }
+
+  .rbx-sign {
+    height: 34px;
+    width: 34px;
+    object-fit: contain;
+    position: absolute;
+    top: 50%;
+    left: 22px;
+    transform: translateY(-50%);
+    pointer-events: none;
+    display: block;
+  }
+
+  .output {
+    border: var(--green) solid 4px;
+    background-color: var(--output-bg);
+    width: 100%;
+    border-radius: 20px;
+    padding: 42px 32px;
+    text-align: center;
+  }
+
+  .output-subtext {
+    margin: 0 0 8px;
+    font-size: 18px;
+    font-weight: 300;
+    color: var(--text-soft);
+  }
+
+  .output-subtext .usd-amount {
+    font-weight: 600;
+    color: #fff;
+  }
+
+  .output-rate {
+    margin: 0 0 26px;
+    font-size: 15px;
+    font-weight: 300;
+    color: var(--text-muted);
+    letter-spacing: 0.02em;
+  }
+
+  .calculated-amount {
+    font-size: 88px;
+    margin: 0;
+    font-weight: 600;
+    line-height: 1.05;
+    color: #fff;
+    word-break: break-word;
+  }
+
+  .calculated-amount .currency {
+    color: var(--green);
+    font-weight: 700;
+    font-size: 0.7em;
+  }
+
+  .footer-note {
+    margin-top: 36px;
+    font-size: 15px;
+    font-weight: 300;
+    color: var(--text-muted);
+  }
+
+  .footer-note .highlighted {
+    color: var(--green);
+    font-weight: 600;
+  }
+
+  @media (max-width: 780px) {
+    .header h1 { font-size: 2.6rem; }
+    .flag { width: 84px; height: 42px; }
+    .calc-container { padding: 50px 32px; }
+    .input-container input { width: 100%; max-width: 340px; font-size: 18px; }
+    .calculated-amount { font-size: 60px; }
+  }
+
+  @media (max-width: 480px) {
+    .header { gap: 16px; margin-bottom: 28px; }
+    .header h1 { font-size: 1.9rem; }
+    .flag { width: 60px; height: 30px; }
+    .calc-container { padding: 36px 22px; border-radius: 16px; }
+    .input-container input { height: 54px; padding: 0 20px 0 60px; }
+    .rbx-sign { width: 28px; height: 28px; left: 18px; }
+    .output { padding: 30px 20px; border-radius: 16px; }
+    .output-subtext { font-size: 15px; }
+    .calculated-amount { font-size: 44px; }
+  }
+</style>
+</head>
+<body>
+  <div class="header">
+    <h1>DevEx <span class="accent">to CAD</span></h1>
+    <img class="flag" src="https://upload.wikimedia.org/wikipedia/commons/c/cf/Flag_of_Canada.svg" alt="Canadian flag" />
+  </div>
+
+  <section class="calc-container">
+    <div class="input-container">
+      <img class="rbx-sign" src="https://devforum-uploads.s3.dualstack.us-east-2.amazonaws.com/uploads/original/4X/e/a/9/ea98f8c6c438d2d8136a6751282a153c6b28b892.png" alt="Robux" />
+      <input type="number" id="robux" min="0" step="any" maxlength="15" placeholder="Enter Robux Amount" inputmode="decimal" />
+    </div>
+
+    <div class="output">
+      <p class="output-subtext"><span class="usd-amount" id="usd">$0.00</span> USD</p>
+      <p class="output-rate" id="rate">1 USD = — CAD</p>
+      <p class="calculated-amount"><span id="cad">$0.00</span> <span class="currency">CAD</span></p>
+    </div>
+
+    <p class="footer-note">
+      DevEx rate: <span class="highlighted">100,000 Robux = $380 USD</span> &middot; <span id="status">Loading rate…</span>
+    </p>
+  </section>
+
+<script>
+  const DEVEX_USD_PER_ROBUX = 380 / 100000;
+  const CACHE_KEY = 'usdCadRate.v1';
+  const CACHE_MAX_AGE_MS = 24 * 60 * 60 * 1000;
+  const FALLBACK_RATE = 1.37;
+
+  const robuxInput = document.getElementById('robux');
+  const usdEl = document.getElementById('usd');
+  const cadEl = document.getElementById('cad');
+  const rateEl = document.getElementById('rate');
+  const statusEl = document.getElementById('status');
+
+  let usdToCad = FALLBACK_RATE;
+
+  const fmtMoney = (n) => n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  const fmtRate = (n) => n.toLocaleString('en-US', { minimumFractionDigits: 4, maximumFractionDigits: 4 });
+
+  function update() {
+    const robux = parseFloat(robuxInput.value) || 0;
+    const usd = robux * DEVEX_USD_PER_ROBUX;
+    const cad = usd * usdToCad;
+    usdEl.textContent = '$' + fmtMoney(usd);
+    cadEl.textContent = '$' + fmtMoney(cad);
+    rateEl.textContent = '1 USD = ' + fmtRate(usdToCad) + ' CAD';
+  }
+
+  async function loadRate() {
+    try {
+      const cached = JSON.parse(localStorage.getItem(CACHE_KEY) || 'null');
+      if (cached && cached.rate && cached.fetchedAt && (Date.now() - cached.fetchedAt) < CACHE_MAX_AGE_MS) {
+        usdToCad = cached.rate;
+        statusEl.textContent = 'Rate updated ' + cached.date;
+        update();
+        return;
+      }
+    } catch (e) {}
+
+    try {
+      const res = await fetch('https://api.frankfurter.app/latest?from=USD&to=CAD');
+      if (!res.ok) throw new Error('Bad response');
+      const data = await res.json();
+      const rate = data.rates && data.rates.CAD;
+      if (!rate) throw new Error('No rate');
+      usdToCad = rate;
+      localStorage.setItem(CACHE_KEY, JSON.stringify({ rate, date: data.date, fetchedAt: Date.now() }));
+      statusEl.textContent = 'Rate updated ' + data.date;
+    } catch (e) {
+      try {
+        const cached = JSON.parse(localStorage.getItem(CACHE_KEY) || 'null');
+        if (cached && cached.rate) {
+          usdToCad = cached.rate;
+          statusEl.textContent = 'Using cached rate from ' + cached.date;
+        } else {
+          statusEl.textContent = 'Using fallback rate';
+        }
+      } catch (_) {
+        statusEl.textContent = 'Using fallback rate';
+      }
+    }
+    update();
+  }
+
+  robuxInput.addEventListener('input', update);
+  update();
+  loadRate();
+</script>
+</body>
+</html>
